@@ -14,7 +14,8 @@
         android:text="+ Outcome"
         android:id="@+id/textview_addOutcome"
         android:textSize="@android:dimen/app_icon_size"
-        android:background="@android:color/holo_red_light" />
+        android:background="@android:color/holo_red_light"
+        android:typeface="serif" />
 
     <TextView
         android:layout_width="match_parent"
@@ -22,7 +23,8 @@
         android:text="+ Income"
         android:id="@+id/textview_addIncome"
         android:textSize="@android:dimen/app_icon_size"
-        android:background="@android:color/holo_blue_light" />
+        android:background="@android:color/holo_blue_light"
+        android:typeface="serif" />
 
     <TextView
         android:layout_width="match_parent"
@@ -30,7 +32,8 @@
         android:text="Set WishItem"
         android:id="@+id/textview_addWishitem"
         android:textSize="@android:dimen/app_icon_size"
-        android:background="@android:color/holo_orange_light" />
+        android:background="@android:color/holo_orange_light"
+        android:typeface="serif" />
 
     <TextView
         android:layout_width="match_parent"
@@ -38,5 +41,17 @@
         android:text="View Records"
         android:id="@+id/textview_showRecords"
         android:textSize="@android:dimen/app_icon_size"
-        android:background="@android:color/holo_green_light" />
+        android:background="@android:color/holo_green_light"
+        android:typeface="serif" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your purse: 0"
+        android:id="@+id/textview_savedmoney"
+        android:typeface="serif"
+        android:textSize="@dimen/abc_alert_dialog_button_bar_height"
+        android:textColor="@color/background_material_light"
+        android:background="@color/material_blue_grey_900"
+        android:autoText="false" />
 </LinearLayout>
