@@ -1,7 +1,9 @@
-package com.pk.purse;
+package com.pk.purse.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.pk.purse.R;
 
 public class MainActivity extends AppCompatActivity {
 
