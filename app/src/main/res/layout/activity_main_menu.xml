@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.MainMenuAct"
+    android:divider="@android:drawable/divider_horizontal_bright"
+    android:background="@android:color/holo_green_dark">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="+ Outcome"
+        android:id="@+id/textview_addOutcome"
+        android:textSize="@android:dimen/app_icon_size"
+        android:background="@android:color/holo_red_light" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="+ Income"
+        android:id="@+id/textview_addIncome"
+        android:textSize="@android:dimen/app_icon_size"
+        android:background="@android:color/holo_blue_light" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Set WishItem"
+        android:id="@+id/textview_addWishitem"
+        android:textSize="@android:dimen/app_icon_size"
+        android:background="@android:color/holo_orange_light" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Records"
+        android:id="@+id/textview_showRecords"
+        android:textSize="@android:dimen/app_icon_size"
+        android:background="@android:color/holo_green_light" />
+</LinearLayout>
