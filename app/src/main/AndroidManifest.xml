@@ -16,6 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.MainMenuAct" />
+        <activity android:name=".activities.ShowAllRecordsAct"></activity>
     </application>
 
 </manifest>
