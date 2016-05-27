@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.MainMenuAct"
-    android:divider="@android:drawable/divider_horizontal_bright"
-    android:background="@color/hint_foreground_material_light">
+    android:background="@color/material_blue_grey_950">
 
     <TextView
         android:layout_width="match_parent"
@@ -32,9 +31,9 @@
         android:text="Set WishItem"
         android:id="@+id/textview_addWishitem"
         android:textSize="@android:dimen/app_icon_size"
-        android:background="@color/foreground_material_light"
+        android:background="@color/button_material_light"
         android:typeface="serif"
-        android:textColor="@android:color/background_light" />
+        android:textColor="@color/switch_thumb_disabled_material_dark" />
 
     <TextView
         android:layout_width="match_parent"
@@ -42,9 +41,9 @@
         android:text="View Records"
         android:id="@+id/textview_showRecords"
         android:textSize="@android:dimen/app_icon_size"
-        android:background="@color/material_blue_grey_900"
+        android:background="@color/dim_foreground_material_dark"
         android:typeface="serif"
-        android:textColor="@android:color/background_light" />
+        android:textColor="@color/switch_thumb_disabled_material_dark" />
 
     <TextView
         android:layout_width="match_parent"
@@ -54,6 +53,6 @@
         android:typeface="serif"
         android:textSize="@dimen/abc_alert_dialog_button_bar_height"
         android:textColor="@android:color/holo_orange_light"
-        android:background="@color/material_blue_grey_800"
+        android:background="@color/button_material_dark"
         android:autoText="false" />
 </LinearLayout>
