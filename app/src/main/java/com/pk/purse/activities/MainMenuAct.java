@@ -3,6 +3,7 @@ package com.pk.purse.activities;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -71,7 +72,8 @@ public class MainMenuAct extends AppCompatActivity {
         showRecordsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Go to show all outcome records
+                Intent intent = new Intent(MainMenuAct.this, ShowAllRecordsAct.class);
+                startActivity(intent);
             }
         });
     }

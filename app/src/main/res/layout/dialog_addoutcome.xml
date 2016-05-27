@@ -7,15 +7,18 @@
         android:id="@+id/edittext_itemname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="text"
         android:hint="Item's name"/>
     <EditText
         android:id="@+id/edittext_itemquantity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="number"
         android:hint="# of items"/>
     <EditText
         android:id="@+id/edittext_priceperitem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="number"
         android:hint="Price Per Item"/>
 </LinearLayout>
