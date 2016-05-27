@@ -13,9 +13,10 @@
 
     <TextView
         android:id="@+id/header_allrecords"
-        android:text="All Reocrds"
+        android:text="All Records"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/abc_action_button_min_width_overflow_material" />
 
     <ListView
         android:id="@+id/listview_allrecords"

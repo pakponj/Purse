@@ -6,7 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainMenuAct"
     android:divider="@android:drawable/divider_horizontal_bright"
-    android:background="@android:color/holo_green_dark">
+    android:background="@color/hint_foreground_material_light">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="+ Income"
+        android:id="@+id/textview_addIncome"
+        android:textSize="@android:dimen/app_icon_size"
+        android:background="@android:color/holo_green_light"
+        android:typeface="serif" />
 
     <TextView
         android:layout_width="match_parent"
@@ -20,20 +29,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="+ Income"
-        android:id="@+id/textview_addIncome"
-        android:textSize="@android:dimen/app_icon_size"
-        android:background="@android:color/holo_blue_light"
-        android:typeface="serif" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:text="Set WishItem"
         android:id="@+id/textview_addWishitem"
         android:textSize="@android:dimen/app_icon_size"
-        android:background="@android:color/holo_orange_light"
-        android:typeface="serif" />
+        android:background="@color/foreground_material_light"
+        android:typeface="serif"
+        android:textColor="@android:color/background_light" />
 
     <TextView
         android:layout_width="match_parent"
@@ -41,8 +42,9 @@
         android:text="View Records"
         android:id="@+id/textview_showRecords"
         android:textSize="@android:dimen/app_icon_size"
-        android:background="@android:color/holo_green_light"
-        android:typeface="serif" />
+        android:background="@color/material_blue_grey_900"
+        android:typeface="serif"
+        android:textColor="@android:color/background_light" />
 
     <TextView
         android:layout_width="match_parent"
@@ -51,7 +53,7 @@
         android:id="@+id/textview_savedmoney"
         android:typeface="serif"
         android:textSize="@dimen/abc_alert_dialog_button_bar_height"
-        android:textColor="@color/background_material_light"
-        android:background="@color/material_blue_grey_900"
+        android:textColor="@android:color/holo_orange_light"
+        android:background="@color/material_blue_grey_800"
         android:autoText="false" />
 </LinearLayout>
