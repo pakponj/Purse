@@ -27,6 +27,8 @@ public class MoneyRecorder {
 
     public void setMoney(double amount) { savedMoney = amount; }
 
+    public void setRecords(List<Record> records) { this.records = records; }
+
     public List<Record> getRecords() { return records; }
 
     public double getSavedMoney() { return savedMoney; }
