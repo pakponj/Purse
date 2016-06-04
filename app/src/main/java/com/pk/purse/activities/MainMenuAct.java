@@ -158,8 +158,8 @@ public class MainMenuAct extends AppCompatActivity {
         if( price == 0 ) return;
         int quantity = Integer.parseInt(sharedPreferences.getString("quantity", defaultValue.toString()));
         if( quantity == 0 ) return;
-        double moneyUsedPerDay = Double.parseDouble(sharedPreferences.getString("moneyUsedPerDay", defaultValue.toString()));
-        if( moneyUsedPerDay == 0 ) return;
+        double moneySavedPerDay = Double.parseDouble(sharedPreferences.getString("moneyUsedPerDay", defaultValue.toString()));
+        if( moneySavedPerDay == 0 ) return;
         int daysUntilPurchase = Integer.parseInt(sharedPreferences.getString("daysUntilPurchase", defaultValue.toString()));
         if( daysUntilPurchase == 0 ) return;
         String startDateText = sharedPreferences.getString("startDate", null);
@@ -173,6 +173,13 @@ public class MainMenuAct extends AppCompatActivity {
         Log.i("WISHED ITEM", "START DATE: "+startDate.toString());
         Log.i("WISHED ITEM", "CURRENT DATE: "+currentDate.toString());
         Log.i("WISHED ITEM", "DAYS LEFT: "+daysLeft);
+        if( daysLeft == 0 ) {
+            //Confirm that wished item has been purchased and add it to the recorder.
+            createWishedItemPurchaseDialog().show();
+        }else {
+            //Show money to save per day
+            createWishedItemStatusDialog(itemName, moneySavedPerDay, daysLeft).show();
+        }
         //update wished item panel
     }
 
@@ -289,6 +296,40 @@ public class MainMenuAct extends AppCompatActivity {
                     }
                 });
 
+        return builder.create();
+    }
+
+    private Dialog createWishedItemStatusDialog(String itemName, double moneySavedPerDay, int daysLeft) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        final View dialogView = this.getLayoutInflater().inflate(R.layout.dialog_wisheditemstatus, null);
+        //TextView for itemName
+        builder.setTitle("Your Wished Item")
+                .setView(dialogView)
+                .setNeutralButton("CLOSE", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        TextView name = (TextView) dialogView.findViewById(R.id.wisheditemstatus_itemname);
+        name.setText(itemName);
+        //TextView for moneySavedPerDay
+        TextView savedPerDay = (TextView) dialogView.findViewById(R.id.wisheditemstatus_moneysavedperday);
+        String format = String.format(Locale.getDefault(),"Money to save today [%.2f]", moneySavedPerDay);
+        savedPerDay.setText(format);
+        //TextView for daysLeft
+        TextView daysLeftText = (TextView) dialogView.findViewById(R.id.wisheditemstatus_daysleft);
+        daysLeftText.setText( String.valueOf(daysLeft) + " days left" );
+
+        return builder.create();
+    }
+
+    private Dialog createWishedItemPurchaseDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+//        final View dialogView = this.getLayoutInflater().inflate(R.layout.dialog_setwisheditem, null);
         return builder.create();
     }
 }
