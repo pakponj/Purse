@@ -9,10 +9,12 @@ public class Planner {
         return instance;
     }
 
-    public Plan createPlan(Item item, int days) {
+    public Plan createPlan(Item item, int days, boolean useSavingMoney) {
         double totalPrice = item.getPrice() * item.getQuantity();
         MoneyRecorder recorder = MoneyRecorder.getInstance();
-        double savedMoney = recorder.getSavedMoney();
+        double savedMoney;
+        if(useSavingMoney) savedMoney = recorder.getSavedMoney();
+        else savedMoney = 0;
         double savedPerDay = ( totalPrice - savedMoney) / days;
 
         return new Plan(savedPerDay, days);

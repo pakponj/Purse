@@ -6,14 +6,24 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Item's name"/>
+        android:hint="Item's name"
+        android:id="@+id/setwisheditem_itemname" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Total Price"/>
+        android:hint="Total Price"
+        android:id="@+id/setwisheditem_price" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="# of days to save money"/>
+        android:hint="# of days to save money"
+        android:id="@+id/setwisheditem_daysuntilpurchase" />
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Use Saving Money"
+        android:id="@+id/setwisheditem_usesavingmoney"
+        android:checked="false" />
 </LinearLayout>

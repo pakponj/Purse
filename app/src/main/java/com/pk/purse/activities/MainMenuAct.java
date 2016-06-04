@@ -11,11 +11,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.pk.purse.R;
 import com.pk.purse.models.Item;
 import com.pk.purse.models.MoneyRecorder;
+import com.pk.purse.models.Plan;
+import com.pk.purse.models.Planner;
 import com.pk.purse.models.Record;
 
 import java.io.FileInputStream;
@@ -25,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MainMenuAct extends AppCompatActivity {
 
@@ -40,6 +44,7 @@ public class MainMenuAct extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
         readSavedMoney();
         readRecords();
+        readWishedItem();
         init();
     }
 
@@ -98,15 +103,16 @@ public class MainMenuAct extends AppCompatActivity {
         if(stringBuilder.length() > 0 ) {
             String[] recordsArray = stringBuilder.toString().split("\n");
             for(String s: recordsArray) {
-                String[] recordArray = s.split(" ",4);
-                String itemName = recordArray[0];
-                double price = Double.parseDouble(recordArray[1]);
-                int quantity = Integer.parseInt(recordArray[2]);
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date time = simpleDateFormat.parse(recordArray[3], new ParsePosition(0));
-//                Date time = Date.valueOf(recordArray[3]);
+                String[] recordArray = s.split(" ",6);
+                int recordType = Integer.valueOf(recordArray[0]);
+                String itemName = recordArray[1];
+                double price = Double.parseDouble(recordArray[2]);
+                int quantity = Integer.parseInt(recordArray[3]);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzzz", Locale.getDefault());
+                double remainingMoney = Double.parseDouble(recordArray[4]);
+                Date time = simpleDateFormat.parse(recordArray[5], new ParsePosition(0));
                 Item item = new Item(itemName, price, quantity);
-                Record record = new Record(item, time);
+                Record record = new Record(recordType, item, time, remainingMoney);
                 records.add(record);
             }
         }
@@ -114,7 +120,7 @@ public class MainMenuAct extends AppCompatActivity {
     }
 
     private void readSavedMoney() {
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = this.getSharedPreferences("savingMoneyPref", Context.MODE_PRIVATE);
         double savedMoney = Double.parseDouble(sharedPref.getString("savedMoney", "0"));
         MoneyRecorder.getInstance().setMoney(savedMoney);
     }
@@ -137,10 +143,51 @@ public class MainMenuAct extends AppCompatActivity {
     }
     private void writeSavedMoney() {
         Log.i("WRITE", "Current saved money ["+MoneyRecorder.getInstance().getSavedMoney()+"]");
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = this.getSharedPreferences("savingMoneyPref", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("savedMoney", String.valueOf(MoneyRecorder.getInstance().getSavedMoney()));
-        editor.commit();
+        editor.apply();
+    }
+
+    private void readWishedItem() {
+        SharedPreferences sharedPreferences = this.getSharedPreferences("wishedItemPref", Context.MODE_PRIVATE);
+        String itemName = sharedPreferences.getString("itemname", null);
+        if( itemName == null ) return;
+        StringBuilder defaultValue = new StringBuilder("0");
+        double price = Double.parseDouble(sharedPreferences.getString("price", defaultValue.toString()));
+        if( price == 0 ) return;
+        int quantity = Integer.parseInt(sharedPreferences.getString("quantity", defaultValue.toString()));
+        if( quantity == 0 ) return;
+        double moneyUsedPerDay = Double.parseDouble(sharedPreferences.getString("moneyUsedPerDay", defaultValue.toString()));
+        if( moneyUsedPerDay == 0 ) return;
+        int daysUntilPurchase = Integer.parseInt(sharedPreferences.getString("daysUntilPurchase", defaultValue.toString()));
+        if( daysUntilPurchase == 0 ) return;
+        String startDateText = sharedPreferences.getString("startDate", null);
+        if( startDateText == null ) return;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzzz", Locale.getDefault());
+        Date startDate = dateFormat.parse(startDateText, new ParsePosition(0));
+        Date currentDate = new Date( System.currentTimeMillis() );
+        long diffTimeInMillSec = currentDate.getTime() - startDate.getTime();
+        long passedDays = diffTimeInMillSec / 1000 / 3600 / 24;
+        int daysLeft = daysUntilPurchase - (int) passedDays;
+        Log.i("WISHED ITEM", "START DATE: "+startDate.toString());
+        Log.i("WISHED ITEM", "CURRENT DATE: "+currentDate.toString());
+        Log.i("WISHED ITEM", "DAYS LEFT: "+daysLeft);
+        //update wished item panel
+    }
+
+    private void writeWishedItem( Item item, Plan plan ) {
+        Log.i("WRITE", "Wished item ["+item.getName()+"]");
+        SharedPreferences sharedPreference = this.getSharedPreferences("wishedItemPref", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreference.edit();
+        editor.putString( "itemname", item.getName() );
+        editor.putString( "price", String.valueOf(item.getPrice()) );
+        editor.putString( "quantity", String.valueOf(item.getQuantity()) );
+        editor.putString( "moneyUsedPerDay", String.valueOf(plan.getMoneyUsedPerDay()) );
+        editor.putString( "daysUntilPurchase", String.valueOf(plan.getDaysUntilPurchasable()) );
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzzz", Locale.getDefault());
+        editor.putString( "startDate", dateFormat.format(plan.getStartDate()) );
+        editor.apply();
     }
 
     private Dialog createAddIncomeDialog() {
@@ -154,10 +201,14 @@ public class MainMenuAct extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         EditText incomeAmount = (EditText) dialogView.findViewById(R.id.edittext_incomeamount);
+                        double amount = Double.parseDouble(incomeAmount.getText().toString());
                         MoneyRecorder mr = MoneyRecorder.getInstance();
-                        mr.addMoney(Double.parseDouble(incomeAmount.getText().toString()));
+                        mr.addMoney(amount);
+                        Record record = new Record(Record.TYPE_INCOME, new Item("additionMoney", amount, 1));
+                        mr.addRecord(record);
                         savedMoneyTextView.setText("Your purse: "+mr.getSavedMoney());
                         writeSavedMoney();
+                        writeRecords();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -186,10 +237,10 @@ public class MainMenuAct extends AppCompatActivity {
                         int quantity = Integer.parseInt(itemQuantity.getText().toString());
                         double price = Double.parseDouble(pricePerItem.getText().toString());
                         Item item = new Item(name, price, quantity);
-                        Record record = new Record(item);
                         MoneyRecorder mr = MoneyRecorder.getInstance();
-                        mr.addRecord(record);
                         mr.substractMoney(price * quantity);
+                        Record record = new Record(Record.TYPE_OUTCOME, item);
+                        mr.addRecord(record);
                         savedMoneyTextView.setText("Your purse: "+mr.getSavedMoney());
                         writeSavedMoney();
                         writeRecords();
@@ -215,7 +266,20 @@ public class MainMenuAct extends AppCompatActivity {
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        EditText itemNameText = (EditText) dialogView.findViewById(R.id.setwisheditem_itemname);
+                        EditText priceText = (EditText) dialogView.findViewById(R.id.setwisheditem_price);
+                        EditText daysUntilPurchaseText = (EditText) dialogView.findViewById(R.id.setwisheditem_daysuntilpurchase);
+                        RadioButton useSavingMoneyButton = (RadioButton) dialogView.findViewById(R.id.setwisheditem_usesavingmoney);
+                        String name = itemNameText.getText().toString();
+                        double price = Double.parseDouble(priceText.getText().toString());
+                        int daysUntilPurchase = Integer.parseInt(daysUntilPurchaseText.getText().toString());
+                        boolean useSavingMoney = useSavingMoneyButton.isChecked();
+                        Item item = new Item(name, price, 1);
+                        Record record = new Record(Record.TYPE_WISHED, item);
+                        MoneyRecorder.getInstance().addRecord(record);
+                        Plan plan = Planner.getInstance().createPlan(item, daysUntilPurchase, useSavingMoney);
+                        writeWishedItem(item, plan);
+                        writeRecords();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

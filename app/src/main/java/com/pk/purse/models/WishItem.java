@@ -26,7 +26,7 @@ public class WishItem {
         else {
             if(plan == null) {
                 Planner planner = Planner.getInstance();
-                plan = planner.createPlan(wishedItem, daysToPurchase);
+//                plan = planner.createPlan(wishedItem, daysToPurchase);
             }
             return plan;
         }
