@@ -16,5 +16,26 @@
         android:id="@+id/logo"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:src="@android:drawable/ic_menu_today" />
+        android:src="@mipmap/purselogo" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tap logo to continue"
+        android:id="@+id/main_tapinfo"
+        android:layout_below="@+id/logo"
+        android:layout_centerHorizontal="true"
+        android:singleLine="false"
+        android:textSize="@dimen/abc_text_size_title_material_toolbar"
+        android:alpha="0.75"
+        android:typeface="normal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome to Purse!"
+        android:id="@+id/main_welcome"
+        android:layout_above="@+id/logo"
+        android:layout_centerHorizontal="true"
+        android:textSize="@dimen/abc_text_size_display_1_material" />
 </RelativeLayout>

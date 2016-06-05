@@ -17,7 +17,7 @@ public class Planner {
         else savedMoney = 0;
         double savedPerDay = ( totalPrice - savedMoney) / days;
 
-        return new Plan(savedPerDay, days);
+        return new Plan(savedPerDay, days, useSavingMoney);
     }
 
 }

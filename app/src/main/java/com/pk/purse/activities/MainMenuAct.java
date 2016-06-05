@@ -152,18 +152,13 @@ public class MainMenuAct extends AppCompatActivity {
     private void readWishedItem() {
         SharedPreferences sharedPreferences = this.getSharedPreferences("wishedItemPref", Context.MODE_PRIVATE);
         String itemName = sharedPreferences.getString("itemname", null);
-        if( itemName == null ) return;
         StringBuilder defaultValue = new StringBuilder("0");
         double price = Double.parseDouble(sharedPreferences.getString("price", defaultValue.toString()));
-        if( price == 0 ) return;
         int quantity = Integer.parseInt(sharedPreferences.getString("quantity", defaultValue.toString()));
-        if( quantity == 0 ) return;
         double moneySavedPerDay = Double.parseDouble(sharedPreferences.getString("moneyUsedPerDay", defaultValue.toString()));
-        if( moneySavedPerDay == 0 ) return;
         int daysUntilPurchase = Integer.parseInt(sharedPreferences.getString("daysUntilPurchase", defaultValue.toString()));
-        if( daysUntilPurchase == 0 ) return;
         String startDateText = sharedPreferences.getString("startDate", null);
-        if( startDateText == null ) return;
+        if( itemName == null || price == 0 || quantity == 0 || moneySavedPerDay == 0 || startDateText == null ) return;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzzz", Locale.getDefault());
         Date startDate = dateFormat.parse(startDateText, new ParsePosition(0));
         Date currentDate = new Date( System.currentTimeMillis() );
@@ -173,14 +168,17 @@ public class MainMenuAct extends AppCompatActivity {
         Log.i("WISHED ITEM", "START DATE: "+startDate.toString());
         Log.i("WISHED ITEM", "CURRENT DATE: "+currentDate.toString());
         Log.i("WISHED ITEM", "DAYS LEFT: "+daysLeft);
+        boolean isUsingSavingMoney = sharedPreferences.getBoolean("usingSavingMoney", false);
         if( daysLeft == 0 ) {
             //Confirm that wished item has been purchased and add it to the recorder.
-            createWishedItemPurchaseDialog().show();
+            Item item = new Item(itemName, price, quantity);
+            createWishedItemPurchaseDialog(item, isUsingSavingMoney).show();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear();
+            editor.apply();
         }else {
-            //Show money to save per day
             createWishedItemStatusDialog(itemName, moneySavedPerDay, daysLeft).show();
         }
-        //update wished item panel
     }
 
     private void writeWishedItem( Item item, Plan plan ) {
@@ -194,6 +192,7 @@ public class MainMenuAct extends AppCompatActivity {
         editor.putString( "daysUntilPurchase", String.valueOf(plan.getDaysUntilPurchasable()) );
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzzz", Locale.getDefault());
         editor.putString( "startDate", dateFormat.format(plan.getStartDate()) );
+        editor.putBoolean( "usingSavingMoney", plan.isUsingSavingMoney() );
         editor.apply();
     }
 
@@ -240,7 +239,7 @@ public class MainMenuAct extends AppCompatActivity {
                         EditText itemName = (EditText) dialogView.findViewById(R.id.edittext_itemname);
                         EditText itemQuantity = (EditText) dialogView.findViewById(R.id.edittext_itemquantity);
                         EditText pricePerItem = (EditText) dialogView.findViewById(R.id.edittext_priceperitem);
-                        String name = itemName.getText().toString();
+                        String name = itemName.getText().toString().replaceAll(" ", "");
                         int quantity = Integer.parseInt(itemQuantity.getText().toString());
                         double price = Double.parseDouble(pricePerItem.getText().toString());
                         Item item = new Item(name, price, quantity);
@@ -277,7 +276,7 @@ public class MainMenuAct extends AppCompatActivity {
                         EditText priceText = (EditText) dialogView.findViewById(R.id.setwisheditem_price);
                         EditText daysUntilPurchaseText = (EditText) dialogView.findViewById(R.id.setwisheditem_daysuntilpurchase);
                         RadioButton useSavingMoneyButton = (RadioButton) dialogView.findViewById(R.id.setwisheditem_usesavingmoney);
-                        String name = itemNameText.getText().toString();
+                        String name = itemNameText.getText().toString().replaceAll(" ", "");
                         double price = Double.parseDouble(priceText.getText().toString());
                         int daysUntilPurchase = Integer.parseInt(daysUntilPurchaseText.getText().toString());
                         boolean useSavingMoney = useSavingMoneyButton.isChecked();
@@ -303,7 +302,6 @@ public class MainMenuAct extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         final View dialogView = this.getLayoutInflater().inflate(R.layout.dialog_wisheditemstatus, null);
-        //TextView for itemName
         builder.setTitle("Your Wished Item")
                 .setView(dialogView)
                 .setNeutralButton("CLOSE", new DialogInterface.OnClickListener() {
@@ -315,21 +313,56 @@ public class MainMenuAct extends AppCompatActivity {
 
         TextView name = (TextView) dialogView.findViewById(R.id.wisheditemstatus_itemname);
         name.setText(itemName);
-        //TextView for moneySavedPerDay
         TextView savedPerDay = (TextView) dialogView.findViewById(R.id.wisheditemstatus_moneysavedperday);
         String format = String.format(Locale.getDefault(),"Money to save today [%.2f]", moneySavedPerDay);
         savedPerDay.setText(format);
-        //TextView for daysLeft
         TextView daysLeftText = (TextView) dialogView.findViewById(R.id.wisheditemstatus_daysleft);
         daysLeftText.setText( String.valueOf(daysLeft) + " days left" );
 
         return builder.create();
     }
 
-    private Dialog createWishedItemPurchaseDialog() {
+    private Dialog createWishedItemPurchaseDialog(final Item wishedItem, final boolean isUsingSavingMoney ) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-//        final View dialogView = this.getLayoutInflater().inflate(R.layout.dialog_setwisheditem, null);
+        final View dialogView = this.getLayoutInflater().inflate(R.layout.dialog_purchasewisheditem, null);
+
+        TextView nameText = (TextView) dialogView.findViewById(R.id.purchasewisheditem_name);
+        nameText.setText( wishedItem.getName() );
+        TextView priceText = (TextView) dialogView.findViewById(R.id.purchasewisheditem_price);
+        priceText.setText( String.valueOf(wishedItem.getPrice()) );
+        TextView useSavingMoneyText = (TextView) dialogView.findViewById(R.id.purchasewisheditem_usesavingmoney);
+        useSavingMoneyText.setText( String.valueOf(isUsingSavingMoney) );
+        final TextView moneyText = (TextView) dialogView.findViewById(R.id.purchasewisheditem_youhave);
+        if( isUsingSavingMoney ) moneyText.setText( String.valueOf(MoneyRecorder.getInstance().getSavedMoney()) );
+        else moneyText.setText( "0" );
+        final EditText addMoneyText = (EditText) dialogView.findViewById(R.id.purchasewisheditem_addmoney);
+
+        builder.setTitle("Purchase Your Wished Item")
+                .setView(dialogView)
+                .setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        double savingMoney = Double.parseDouble(moneyText.getText().toString());
+                        double addedMoney = Double.parseDouble(addMoneyText.getText().toString());
+                        MoneyRecorder moneyRecorder = MoneyRecorder.getInstance();
+                        moneyRecorder.addMoney( addedMoney );
+                        double totalMoney = savingMoney + addedMoney;
+                        double change = totalMoney - wishedItem.getPrice();
+                        if( change >= 0 ) {
+                            moneyRecorder.substractMoney( wishedItem.getPrice() );
+                            Record record = new Record(Record.TYPE_OUTCOME, wishedItem);
+                            moneyRecorder.addRecord( record );
+                            savedMoneyTextView.setText( "Your purse: "+moneyRecorder.getSavedMoney() );
+                        }
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
         return builder.create();
     }
 }

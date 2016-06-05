@@ -7,10 +7,12 @@ public class Plan {
     private double moneyUsedPerDay;
     private int daysUntilPurchasable;
     private Date startDate;
+    private boolean usingSavingMoney;
 
-    public Plan(double moneyUsedPerDay, int daysUntilPurchasable) {
+    public Plan(double moneyUsedPerDay, int daysUntilPurchasable, boolean usingSavingMoney) {
         this.moneyUsedPerDay = moneyUsedPerDay;
         this.daysUntilPurchasable = daysUntilPurchasable;
+        this.usingSavingMoney = usingSavingMoney;
         startDate = new Date( System.currentTimeMillis() );
     }
 
@@ -31,4 +33,6 @@ public class Plan {
     }
 
     public Date getStartDate() { return startDate; }
+
+    public boolean isUsingSavingMoney() { return usingSavingMoney; }
 }

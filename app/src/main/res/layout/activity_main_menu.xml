@@ -12,47 +12,52 @@
         android:layout_height="wrap_content"
         android:text="+ Income"
         android:id="@+id/textview_addIncome"
-        android:textSize="@android:dimen/app_icon_size"
+        android:textSize="@dimen/abc_action_button_min_width_overflow_material"
         android:background="@android:color/holo_green_light"
-        android:typeface="serif" />
+        android:typeface="normal"
+        android:padding="@dimen/abc_action_bar_overflow_padding_start_material" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="+ Outcome"
         android:id="@+id/textview_addOutcome"
-        android:textSize="@android:dimen/app_icon_size"
+        android:textSize="@dimen/abc_action_button_min_width_overflow_material"
         android:background="@android:color/holo_red_light"
-        android:typeface="serif" />
+        android:typeface="normal"
+        android:padding="@dimen/abc_action_bar_overflow_padding_start_material" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Set WishItem"
         android:id="@+id/textview_addWishitem"
-        android:textSize="@android:dimen/app_icon_size"
+        android:textSize="@dimen/abc_action_button_min_width_overflow_material"
         android:background="@color/button_material_light"
-        android:typeface="serif"
-        android:textColor="@color/switch_thumb_disabled_material_dark" />
+        android:typeface="normal"
+        android:textColor="@color/switch_thumb_disabled_material_dark"
+        android:padding="@dimen/abc_action_bar_overflow_padding_start_material" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="View Records"
         android:id="@+id/textview_showRecords"
-        android:textSize="@android:dimen/app_icon_size"
+        android:textSize="@dimen/abc_action_button_min_width_overflow_material"
         android:background="@color/dim_foreground_material_dark"
-        android:typeface="serif"
-        android:textColor="@color/switch_thumb_disabled_material_dark" />
+        android:typeface="normal"
+        android:textColor="@color/switch_thumb_disabled_material_dark"
+        android:padding="@dimen/abc_action_bar_overflow_padding_start_material" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Your purse: 0"
         android:id="@+id/textview_savedmoney"
-        android:typeface="serif"
-        android:textSize="@dimen/abc_alert_dialog_button_bar_height"
+        android:typeface="normal"
+        android:textSize="@dimen/abc_action_button_min_width_overflow_material"
         android:textColor="@android:color/holo_orange_light"
         android:background="@color/button_material_dark"
-        android:autoText="false" />
+        android:autoText="false"
+        android:padding="@dimen/abc_action_bar_overflow_padding_start_material" />
 </LinearLayout>

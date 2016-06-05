@@ -6,18 +6,22 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="text"
         android:hint="Item's name"
+
         android:id="@+id/setwisheditem_itemname" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Total Price"
+        android:inputType="numberDecimal"
         android:id="@+id/setwisheditem_price" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="# of days to save money"
+        android:inputType="number"
         android:id="@+id/setwisheditem_daysuntilpurchase" />
 
     <RadioButton

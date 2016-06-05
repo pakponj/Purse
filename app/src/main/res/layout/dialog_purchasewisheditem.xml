@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Item&apos;s name"
+        android:id="@+id/purchasewisheditem_name"
+        android:padding="@dimen/abc_button_padding_horizontal_material" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Price: "
+        android:id="@+id/purchasewisheditem_price"
+        android:padding="@dimen/abc_button_padding_horizontal_material" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Use Saving Money:"
+        android:id="@+id/purchasewisheditem_usesavingmoney"
+        android:padding="@dimen/abc_button_padding_horizontal_material" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You have: "
+        android:id="@+id/purchasewisheditem_youhave"
+        android:padding="@dimen/abc_button_padding_horizontal_material" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/purchasewisheditem_addmoney"
+        android:hint="Insert more money"
+        android:inputType="numberDecimal" />
+</LinearLayout>
