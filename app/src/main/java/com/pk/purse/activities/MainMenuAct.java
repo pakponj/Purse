@@ -207,14 +207,18 @@ public class MainMenuAct extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         EditText incomeAmount = (EditText) dialogView.findViewById(R.id.edittext_incomeamount);
-                        double amount = Double.parseDouble(incomeAmount.getText().toString());
-                        MoneyRecorder mr = MoneyRecorder.getInstance();
-                        mr.addMoney(amount);
-                        Record record = new Record(Record.TYPE_INCOME, new Item("additionMoney", amount, 1));
-                        mr.addRecord(record);
-                        savedMoneyTextView.setText("Your purse: "+mr.getSavedMoney());
-                        writeSavedMoney();
-                        writeRecords();
+                        String amountText = incomeAmount.getText().toString();
+                        if( amountText.length() > 0 ) {
+                            double amount = Double.parseDouble(amountText);
+                            MoneyRecorder mr = MoneyRecorder.getInstance();
+                            mr.addMoney(amount);
+                            Record record = new Record(Record.TYPE_INCOME, new Item("additionMoney", amount, 1));
+                            mr.addRecord(record);
+                            savedMoneyTextView.setText("Your purse: "+mr.getSavedMoney());
+                            writeSavedMoney();
+                            writeRecords();
+                            createSuccessfulRecordDialog().show();
+                        }else createFailedRecordDialog().show();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -240,16 +244,21 @@ public class MainMenuAct extends AppCompatActivity {
                         EditText itemQuantity = (EditText) dialogView.findViewById(R.id.edittext_itemquantity);
                         EditText pricePerItem = (EditText) dialogView.findViewById(R.id.edittext_priceperitem);
                         String name = itemName.getText().toString().replaceAll(" ", "");
-                        int quantity = Integer.parseInt(itemQuantity.getText().toString());
-                        double price = Double.parseDouble(pricePerItem.getText().toString());
-                        Item item = new Item(name, price, quantity);
-                        MoneyRecorder mr = MoneyRecorder.getInstance();
-                        mr.substractMoney(price * quantity);
-                        Record record = new Record(Record.TYPE_OUTCOME, item);
-                        mr.addRecord(record);
-                        savedMoneyTextView.setText("Your purse: "+mr.getSavedMoney());
-                        writeSavedMoney();
-                        writeRecords();
+                        String quantityText = itemQuantity.getText().toString();
+                        String priceText = pricePerItem.getText().toString();
+                        if( name.length() > 0 && quantityText.length() > 0 && priceText.length() > 0 ) {
+                            int quantity = Integer.parseInt(quantityText);
+                            double price = Double.parseDouble(priceText);
+                            Item item = new Item(name, price, quantity);
+                            MoneyRecorder mr = MoneyRecorder.getInstance();
+                            mr.substractMoney(price * quantity);
+                            Record record = new Record(Record.TYPE_OUTCOME, item);
+                            mr.addRecord(record);
+                            savedMoneyTextView.setText("Your purse: "+mr.getSavedMoney());
+                            writeSavedMoney();
+                            writeRecords();
+                            createSuccessfulRecordDialog().show();
+                        }else createFailedRecordDialog().show();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -273,25 +282,30 @@ public class MainMenuAct extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         EditText itemNameText = (EditText) dialogView.findViewById(R.id.setwisheditem_itemname);
-                        EditText priceText = (EditText) dialogView.findViewById(R.id.setwisheditem_price);
+                        EditText priceEditText = (EditText) dialogView.findViewById(R.id.setwisheditem_price);
                         EditText daysUntilPurchaseText = (EditText) dialogView.findViewById(R.id.setwisheditem_daysuntilpurchase);
                         RadioButton useSavingMoneyButton = (RadioButton) dialogView.findViewById(R.id.setwisheditem_usesavingmoney);
                         String name = itemNameText.getText().toString().replaceAll(" ", "");
-                        double price = Double.parseDouble(priceText.getText().toString());
-                        int daysUntilPurchase = Integer.parseInt(daysUntilPurchaseText.getText().toString());
-                        boolean useSavingMoney = useSavingMoneyButton.isChecked();
-                        Item item = new Item(name, price, 1);
-                        Record record = new Record(Record.TYPE_WISHED, item);
-                        MoneyRecorder.getInstance().addRecord(record);
-                        Plan plan = Planner.getInstance().createPlan(item, daysUntilPurchase, useSavingMoney);
-                        writeWishedItem(item, plan);
-                        writeRecords();
+                        String priceText = priceEditText.getText().toString();
+                        String daysText = daysUntilPurchaseText.getText().toString();
+                        if( name.length() > 0 && priceText.length() > 0 && daysText.length() > 0 ) {
+                            double price = Double.parseDouble(priceText);
+                            int daysUntilPurchase = Integer.parseInt(daysText);
+                            boolean useSavingMoney = useSavingMoneyButton.isChecked();
+                            Item item = new Item(name, price, 1);
+                            Record record = new Record(Record.TYPE_WISHED, item);
+                            MoneyRecorder.getInstance().addRecord(record);
+                            Plan plan = Planner.getInstance().createPlan(item, daysUntilPurchase, useSavingMoney);
+                            writeWishedItem(item, plan);
+                            writeRecords();
+                            createSuccessfulRecordDialog().show();
+                        } else createFailedRecordDialog().show();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        dialog.cancel();
                     }
                 });
 
@@ -344,25 +358,40 @@ public class MainMenuAct extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         double savingMoney = Double.parseDouble(moneyText.getText().toString());
-                        double addedMoney = Double.parseDouble(addMoneyText.getText().toString());
-                        MoneyRecorder moneyRecorder = MoneyRecorder.getInstance();
-                        moneyRecorder.addMoney( addedMoney );
-                        double totalMoney = savingMoney + addedMoney;
-                        double change = totalMoney - wishedItem.getPrice();
-                        if( change >= 0 ) {
-                            moneyRecorder.substractMoney( wishedItem.getPrice() );
-                            Record record = new Record(Record.TYPE_OUTCOME, wishedItem);
-                            moneyRecorder.addRecord( record );
-                            savedMoneyTextView.setText( "Your purse: "+moneyRecorder.getSavedMoney() );
-                        }
+                        if( addMoneyText.length() > 0) {
+                            double addedMoney = Double.parseDouble(addMoneyText.getText().toString());
+                            MoneyRecorder moneyRecorder = MoneyRecorder.getInstance();
+                            moneyRecorder.addMoney( addedMoney );
+                            double totalMoney = savingMoney + addedMoney;
+                            double change = totalMoney - wishedItem.getPrice();
+                            if( change >= 0 ) {
+                                moneyRecorder.substractMoney( wishedItem.getPrice() );
+                                Record record = new Record(Record.TYPE_OUTCOME, wishedItem);
+                                moneyRecorder.addRecord( record );
+                                savedMoneyTextView.setText( "Your purse: "+moneyRecorder.getSavedMoney() );
+                                createSuccessfulRecordDialog().show();
+                            }else createFailedRecordDialog().show();
+                        }createFailedRecordDialog().show();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        dialog.cancel();
                     }
                 });
         return builder.create();
+    }
+
+    private Dialog createSuccessfulRecordDialog() {
+        AlertDialog.Builder statusBuilder = new AlertDialog.Builder(MainMenuAct.this);
+        statusBuilder.setMessage("Record updates successfully!");
+        return statusBuilder.create();
+    }
+
+    private Dialog createFailedRecordDialog() {
+        AlertDialog.Builder statusBuilder = new AlertDialog.Builder(MainMenuAct.this);
+        statusBuilder.setMessage("Record failed, please fill in every information correctly");
+        return statusBuilder.create();
     }
 }
